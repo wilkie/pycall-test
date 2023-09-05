@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    numpy (0.4.0)
+      pycall (>= 1.2.0.beta1)
+    pycall (1.5.1)
+
+PLATFORMS
+  aarch64-linux
+
+DEPENDENCIES
+  numpy
+  pycall
+
+RUBY VERSION
+   ruby 3.0.5p211
+
+BUNDLED WITH
+   2.2.33
