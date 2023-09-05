@@ -41,6 +41,7 @@ end
 # Test interacting with openai directly in Ruby via their python library
 
 if ENV["OPENAI_API_KEY"]
+  puts
   openai = PyCall.import_module("openai")
 
   openai.api_key = ENV["OPENAI_API_KEY"]
@@ -52,8 +53,6 @@ if ENV["OPENAI_API_KEY"]
   models.data.each do |model|
     print(model.id, ", ")
   end
-
-  puts
 
   # create a chat completion
   chat_completion = openai.ChatCompletion.create(model: "gpt-3.5-turbo", messages:[{"role": "user", "content": "Hello world"}])
@@ -68,4 +67,15 @@ end
 # Ensure that the local directory is part of the system path
 PyCall.sys.path.append('./lib')
 stuff = PyCall.import_module("stuff")
+puts
 stuff.do_something()
+
+puts
+puts "Now without the GVL."
+puts
+
+PyCall.without_gvl do
+  # In this block, all Python function calls are performed without
+  # the GVL acquisition.
+  stuff.do_something()
+end
