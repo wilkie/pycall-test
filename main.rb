@@ -40,22 +40,32 @@ end
 
 # Test interacting with openai directly in Ruby via their python library
 
-openai = PyCall.import_module("openai")
+if ENV["OPENAI_API_KEY"]
+  openai = PyCall.import_module("openai")
 
-openai.api_key = ENV["OPENAI_API_KEY"]
+  openai.api_key = ENV["OPENAI_API_KEY"]
 
-# list models
-models = openai.Model.list()
+  # list models
+  models = openai.Model.list()
 
-# print the first model's id
-models.data.each do |model|
-  print(model.id, ", ")
+  # print the first model's id
+  models.data.each do |model|
+    print(model.id, ", ")
+  end
+
+  puts
+
+  # create a chat completion
+  chat_completion = openai.ChatCompletion.create(model: "gpt-3.5-turbo", messages:[{"role": "user", "content": "Hello world"}])
+
+  # print the chat completion
+  puts(chat_completion.choices[0].message.content)
+else
+  puts "Set OPENAI_API_KEY as an environment variable and run again."
+  puts
 end
 
-puts
-
-# create a chat completion
-chat_completion = openai.ChatCompletion.create(model: "gpt-3.5-turbo", messages:[{"role": "user", "content": "Hello world"}])
-
-# print the chat completion
-puts(chat_completion.choices[0].message.content)
+# Ensure that the local directory is part of the system path
+PyCall.sys.path.append('./lib')
+stuff = PyCall.import_module("stuff")
+stuff.do_something()
